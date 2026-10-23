@@ -7,7 +7,7 @@ window.EMPRESA = {
   telefone: '',            // ex.: '(49) 3300-0000'
   endereco: 'R. Borges de Medeiros, 1995-E · Passo dos Fortes · Chapecó/SC · 89805-570',
   mapa: 'https://www.google.com/maps/search/?api=1&query=Mestre+das+M%C3%A1quinas+R.+Borges+de+Medeiros+1995-E+Chapec%C3%B3',
-  horario: 'Segunda a sexta, 8h–12h e 13h30–17h30',
+  horario: 'Seg a sex, 8h–12h e 13h30–17h30 · Sáb, 8h–12h',
   instagram: 'mmestredasmaquinas',
   // ⚠️ confirmar o raio real de entrega
   cidades: ['Chapecó', 'Guatambu', 'Cordilheira Alta', 'Nova Itaberaba', 'Arvoredo', 'Xaxim', 'Coronel Freitas', 'Planalto Alegre', 'Caxambu do Sul', 'Seara']
@@ -22,7 +22,7 @@ window.FAQ = [
   { p: 'Não sei qual máquina preciso. Vocês ajudam?', r: 'Ajudamos. Manda uma foto ou descreve o serviço no WhatsApp que a gente indica a máquina certa e passa o valor.' },
   { p: 'Quais cidades vocês atendem?', r: 'Chapecó e região: {cidades}. Sua obra é em outra cidade? Pergunte no WhatsApp.' },
   { p: 'Onde vocês ficam?', r: 'Na R. Borges de Medeiros, 1995-E, Passo dos Fortes, Chapecó/SC. Você pode retirar o equipamento com a gente ou pedir a entrega na obra.' },
-  { p: 'Qual o horário de atendimento?', r: 'De segunda a sexta, das 8h às 12h e das 13h30 às 17h30. Mandou mensagem fora do horário? A gente responde logo no primeiro horário.' },
+  { p: 'Qual o horário de atendimento?', r: 'De segunda a sexta, das 8h às 12h e das 13h30 às 17h30, e no sábado das 8h às 12h. Mandou mensagem fora do horário? A gente responde logo no primeiro horário.' },
   { p: 'Não achei o equipamento no site. Vocês têm?', r: 'No site estão só os mais pedidos. A frota tem mais de 100 itens: pergunte no WhatsApp que a gente confere na hora.' }
   // ⚠️ quando definir, incluir: { p: 'Que documentos preciso para alugar?', r: '...' } e { p: 'Precisa de caução?', r: '...' }
 ];
