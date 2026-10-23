@@ -94,6 +94,50 @@ h2 {
 .nav-lista svg { width: 20px; height: 20px; }
 .nav-lista .badge { position: absolute; top: -8px; right: -8px; min-width: 20px; height: 20px; font-size: 11px; background: var(--aco); color: var(--carvao); }
 
+/* CAPA COMERCIAL */
+.capa { position: relative; min-height: 100vh; min-height: 100svh; display: flex; align-items: center; overflow: hidden; background: var(--carvao); }
+.capa-foto { position: absolute; inset: 0; }
+.capa-foto img { width: 100%; height: 100%; object-fit: cover; object-position: 45% 60%; transform-origin: 70% 60%; }
+.capa-veu {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(10, 10, 10, .92) 0%, rgba(10, 10, 10, .7) 30%, rgba(10, 10, 10, 0) 55%),
+    linear-gradient(0deg, #0A0A0A 0%, rgba(10, 10, 10, 0) 26%),
+    linear-gradient(180deg, rgba(10, 10, 10, .65), rgba(10, 10, 10, 0) 20%);
+}
+.capa-txt { position: relative; z-index: 2; width: min(660px, 47vw); margin-left: var(--lado); padding: calc(var(--nav) + 30px) 0 90px; }
+.capa-logo { width: clamp(240px, 24vw, 400px); height: auto; margin-bottom: clamp(26px, 3.5vw, 46px); }
+.capa-tit { font-family: Sora, sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: -.04em; line-height: .92; font-size: clamp(52px, 6.9vw, 114px); }
+.capa-tit .ln { display: block; overflow: hidden; padding: .1em 0 .04em; margin-top: -.1em; white-space: nowrap; }
+.capa-tit .ln > span { display: inline-block; }
+.capa-tit .ln + .ln > span { color: var(--aco); }
+.capa-sub { margin-top: 26px; max-width: 520px; font-size: clamp(16px, 1.35vw, 20px); color: var(--prata); }
+.capa-sub b { color: #fff; font-weight: 600; }
+.capa-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+.capa-provas { list-style: none; display: flex; gap: clamp(22px, 3.5vw, 52px); margin-top: 44px; padding-top: 24px; border-top: 1px solid var(--linha); max-width: 600px; }
+.capa-provas li { display: flex; flex-direction: column; gap: 4px; }
+.capa-provas b { font-family: Sora, sans-serif; font-weight: 800; font-size: clamp(24px, 2.2vw, 34px); letter-spacing: -.03em; color: #fff; white-space: nowrap; line-height: 1.1; }
+.capa-provas span { font-size: 12px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; line-height: 1.35; color: var(--texto-2); white-space: nowrap; }
+.nav-logo { transition: opacity .35s; }
+body.na-capa .nav:not(.solida) .nav-logo { opacity: 0; pointer-events: none; }
+.capa-rolar { position: absolute; left: 50%; bottom: 26px; transform: translateX(-50%); z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 11px; letter-spacing: .28em; text-transform: uppercase; color: var(--texto-2); }
+.capa-rolar i { width: 1px; height: 40px; background: linear-gradient(180deg, var(--aco), transparent); animation: rolar 2s infinite; transform-origin: top; }
+.js .capa-tit .ln > span, .js [data-capa] { visibility: hidden; }
+@media (max-width: 860px) {
+  .capa { align-items: flex-start; min-height: 122svh; }
+  .capa-cta .btn-linha { background: rgba(10, 10, 10, .78); }
+  .capa-foto img { object-position: 50% 100%; }
+  .capa-veu { background: linear-gradient(180deg, rgba(10, 10, 10, .92) 0%, rgba(10, 10, 10, .75) 38%, rgba(10, 10, 10, 0) 58%), linear-gradient(0deg, #0A0A0A 0%, rgba(10, 10, 10, 0) 24%); }
+  .capa-txt { width: auto; margin: 0 var(--lado); padding: calc(var(--nav) + 18px) 0 0; }
+  .capa-logo { width: 210px; margin-bottom: 18px; }
+  .capa-tit { font-size: clamp(46px, 14vw, 72px); }
+  .capa-sub { margin-top: 14px; font-size: 15.5px; }
+  .capa-cta { margin-top: 20px; }
+  .capa-cta .btn { flex: 1 1 100%; }
+  .capa-provas { position: fixed; display: none; }
+  .capa-rolar { display: none; }
+}
+
 /* FILME DE ABERTURA — a obra se transforma com a rolagem */
 .filme { position: relative; height: 560vh; background: var(--carvao); }
 .filme-pin { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }

@@ -350,7 +350,7 @@
     const P = Math.min(1, Math.max(0, (scrollY - filme.offsetTop) / curso));
     const seg = Math.min(P * 5, 4.9999), k = Math.floor(seg), local = seg - k;
     const Q = FILME.quadros;
-    let g = 0, cap = 0;
+    let g = 0, cap = scrollY + innerHeight * 0.45 < filme.offsetTop ? -1 : 0;
     if (k > 0) {
       g = (k - 1) * Q + Math.min(1, local / 0.62) * (Q - 1);
       cap = local < 0.05 ? k - 1 : local > 0.32 ? k : -1;
@@ -371,7 +371,16 @@
     mostrarCap(cap);
     rolar.style.opacity = P > 0.01 ? 0 : 1;
   });
-  gsap.from('.nav', { y: -20, opacity: 0, duration: 1, ease: 'power3.out', delay: 0.2 });
+  // capa: a frota aparece e o texto entra em sequência
+  gsap.timeline({ defaults: { ease: 'power4.out' }, delay: 0.1 })
+    .fromTo('.capa-foto img', { scale: 1.12, opacity: 0 }, { scale: 1, opacity: 1, duration: 2.2, ease: 'power2.out' }, 0)
+    .from('.nav', { y: -20, opacity: 0, duration: 1 }, 0.3)
+    .set('.capa-tit .ln > span, [data-capa]', { visibility: 'visible' }, 0.35)
+    .from('.capa-logo', { y: 24, opacity: 0, duration: 1 }, 0.35)
+    .from('.capa-tit .ln > span', { yPercent: 110, duration: 1.2, stagger: 0.12 }, 0.5)
+    .from('.capa-sub, .capa-cta, .capa-provas', { y: 24, opacity: 0, duration: 1, stagger: 0.1 }, 0.9);
+  gsap.to('.capa-foto img', { yPercent: 8, scale: 1.05, ease: 'none', scrollTrigger: { trigger: '.capa', start: 'top top', end: 'bottom top', scrub: true } });
+  gsap.to('.capa-txt', { yPercent: -12, opacity: 0.15, ease: 'none', scrollTrigger: { trigger: '.capa', start: '35% top', end: 'bottom top', scrub: true } });
 
   // novas seções entram ao rolar
   $$('.sec-cab, .provas, .passos, .rapido-txt, .faq').forEach(el => {
@@ -411,9 +420,11 @@
     onUpdate: s => {
       barra.style.transform = `scaleX(${s.progress})`;
       nav.classList.toggle('solida', scrollY > 30);
+      document.body.classList.toggle('na-capa', scrollY < innerHeight * 0.6);
       flut.classList.toggle('visivel', scrollY > innerHeight * 0.5);
     }
   });
+  document.body.classList.toggle('na-capa', scrollY < innerHeight * 0.6);
   addEventListener('load', () => ScrollTrigger.refresh());
   document.fonts && document.fonts.ready.then(() => ScrollTrigger.refresh());
 })();

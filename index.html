@@ -21,7 +21,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="preload" as="image" href="midia/k1-terreno-1600.webp">
+<link rel="preload" as="image" href="midia/capa-1920.webp" media="(min-width: 861px)">
+<link rel="preload" as="image" href="midia/capa-celular.webp" media="(max-width: 860px)">
 <link rel="stylesheet" href="css/estilo.css">
 <script type="application/ld+json">
 {
@@ -65,26 +66,41 @@
 </header>
 
 <main>
-  <!-- ABERTURA: filme da obra controlado pela rolagem -->
-  <section class="filme" id="topo">
+  <!-- CAPA: frota da Mestre + frase de impacto -->
+  <section class="capa" id="topo">
+    <picture class="capa-foto" aria-hidden="true">
+      <source media="(max-width: 860px)" srcset="midia/capa-celular.webp">
+      <img src="midia/capa-1920.webp" alt="">
+    </picture>
+    <div class="capa-veu" aria-hidden="true"></div>
+    <div class="capa-txt">
+      <img class="capa-logo" src="assets/logo-horizontal-escuro.svg" alt="Mestre das Máquinas — locação de equipamentos" width="440" height="140" data-capa>
+      <h1 class="capa-tit"><span class="ln"><span>Sua obra</span></span><span class="ln"><span>não para.</span></span></h1>
+      <p class="capa-sub" data-capa>Locação de equipamentos em Chapecó e região. Máquina revisada, entrega na obra e, se parar, <b>troca no mesmo dia</b>.</p>
+      <div class="capa-cta" data-capa>
+        <a class="btn btn-aco btn-g" data-whats="geral" data-evento="whats_topo" href="#" target="_blank" rel="noopener"><svg class="ic"><use href="#i-whats"/></svg>Pedir orçamento no WhatsApp</a>
+        <a class="btn btn-linha btn-g" href="#equipamentos">Ver equipamentos</a>
+      </div>
+      <ul class="capa-provas" data-capa>
+        <li><b>+100</b><span>equipamentos</span></li>
+        <li><b>Mesmo dia</b><span>troca se parar</span></li>
+        <li><b>10 cidades</b><span>atendidas</span></li>
+      </ul>
+    </div>
+    <a class="capa-rolar" href="#cap-0"><span>Veja a obra subir</span><i aria-hidden="true"></i></a>
+  </section>
+
+  <!-- FILME: a obra sobe com a rolagem -->
+  <section class="filme" id="obra">
     <div class="filme-pin">
       <canvas class="filme-canvas" aria-hidden="true"></canvas>
       <img class="filme-poster" src="midia/k1-terreno-1600.webp" alt="" aria-hidden="true">
       <div class="filme-veu" aria-hidden="true"></div>
       <div class="filme-caps" data-caps>
         <article class="cap" data-cap="0">
-          <p class="rotulo"><span class="so-pc">Locação de equipamentos · </span>Chapecó e região</p>
-          <h1 class="cap-tit"><span class="ln"><span>Da fundação</span></span><span class="ln"><span>à entrega.</span></span></h1>
-          <p class="cap-txt">Obra parada custa mais que o aluguel. Aqui a máquina sai revisada e, se parar, a gente troca no mesmo dia.</p>
-          <div class="cap-cta">
-            <a class="btn btn-aco btn-g" data-whats="geral" data-evento="whats_topo" href="#" target="_blank" rel="noopener"><svg class="ic"><use href="#i-whats"/></svg>Pedir orçamento no WhatsApp</a>
-            <a class="btn btn-linha btn-g" href="#equipamentos">Ver equipamentos</a>
-          </div>
-          <ul class="cap-provas">
-            <li><svg><use href="#i-check"/></svg>Troca no mesmo dia</li>
-            <li><svg><use href="#i-check"/></svg>Sai revisada e testada</li>
-            <li><svg><use href="#i-check"/></svg>Entrega na obra</li>
-          </ul>
+          <p class="rotulo">Do terreno à entrega</p>
+          <h2 class="cap-tit"><span class="ln"><span>Da fundação</span></span><span class="ln"><span>à entrega.</span></span></h2>
+          <p class="cap-txt">Role e veja a obra subir: em cada fase, os equipamentos certos para o serviço.</p>
         </article>
       </div>
       <nav class="filme-indice" aria-label="Capítulos" data-indice></nav>
