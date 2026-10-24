@@ -17,7 +17,6 @@ window.WHATSAPP = window.EMPRESA.whatsapp;
 /* Dúvidas frequentes (respostas do kit do Google Meu Negócio). */
 window.FAQ = [
   { p: 'Vocês entregam na obra?', r: 'Sim. Entregamos e retiramos na obra em Chapecó e região. Chama no WhatsApp com o endereço que a gente passa o valor da entrega.' },
-  { p: 'E se a máquina estragar durante a locação?', r: 'A máquina sai revisada daqui. Se mesmo assim parar, a troca é no mesmo dia. É só chamar no WhatsApp.' },
   { p: 'Dá para alugar por um dia só?', r: 'Dá. A locação é por diária, semana ou mês: você paga só o período que usar.' },
   { p: 'Não sei qual máquina preciso. Vocês ajudam?', r: 'Ajudamos. Manda uma foto ou descreve o serviço no WhatsApp que a gente indica a máquina certa e passa o valor.' },
   { p: 'Quais cidades vocês atendem?', r: 'Chapecó e região: {cidades}. Sua obra é em outra cidade? Pergunte no WhatsApp.' },

@@ -74,23 +74,28 @@
   $$('[data-total-conj]').forEach(el => (el.textContent = window.CONJUNTOS.length));
 
   // capítulos do filme de abertura (1 por fase)
-  const kitsDa = n => window.CONJUNTOS.map((c, i) => ({ ...c, i })).filter(c => c.fase === n);
-  const kit = c => `
-    <div class="kit">
-      <div class="kit-txt"><h3>Kit ${c.nome}</h3><p>${c.itens.map(id => EQ[id].nome).join(' · ')}</p></div>
-      <button class="kit-btn" type="button" data-conj-add="${c.i}">Orçar kit <i aria-hidden="true">+</i></button>
-    </div>`;
+  const cartaoEq = id => `<button type="button" data-ir-eq="${id}"><span class="foto">${imgEq(id)}</span><span class="nome">${EQ[id].nome}</span></button>`;
   $('[data-caps]').insertAdjacentHTML('beforeend', FASES.map(f => `
     <article class="cap" data-cap="${f.n}">
       <span class="cap-num" aria-hidden="true">${pad(f.n)}</span>
       <p class="rotulo">Fase ${pad(f.n)} · ${f.nome}</p>
       <h2 class="cap-tit">${f.titulo.map(t => `<span class="ln"><span>${t}</span></span>`).join('')}</h2>
-      <div class="kits">${kitsDa(f.n).map(kit).join('')}</div>
-      <button class="cap-link" type="button" data-ver-fase="${f.n}">Ver equipamentos desta fase <i aria-hidden="true">→</i></button>
+      <p class="cap-txt">${f.texto}</p>
+      <div class="cap-eq">${f.destaques.map(cartaoEq).join('')}</div>
+      <button class="cap-link" type="button" data-ver-fase="${f.n}">Ver todos desta fase <i aria-hidden="true">→</i></button>
     </article>`).join(''));
-  const NOMES_CAP = ['Kits', ...FASES.map(f => f.curto)];
+  const NOMES_CAP = ['Início', ...FASES.map(f => f.curto)];
   $('[data-indice]').innerHTML = NOMES_CAP.map((t, i) => `<button type="button" data-ir-cap="${i}" aria-label="${t}"><span>${t}</span>${pad(i)}</button>`).join('');
   $('[data-ancoras]').innerHTML = NOMES_CAP.map((t, i) => `<span id="cap-${i}"></span>`).join('');
+
+  // conjuntos
+  $('[data-conj]').innerHTML = window.CONJUNTOS.map((c, i) => `
+    <article class="conj">
+      <div class="conj-topo"><span class="conj-idx">${pad(i + 1)}</span><span class="conj-et">Fase ${pad(c.fase)}</span></div>
+      <h3>${c.nome}</h3>
+      <ul>${c.itens.map(id => `<li>${EQ[id].nome}</li>`).join('')}</ul>
+      <button class="btn btn-linha" type="button" data-conj-add="${i}">Orçar este conjunto</button>
+    </article>`).join('');
 
   // catálogo
   const ordem = Object.keys(EQ).sort((a, b) => (!!EQ[b].destaque - !!EQ[a].destaque) || (EQ[a].fases[0] - EQ[b].fases[0]));
@@ -126,7 +131,6 @@
       if (okF && okB) visiveis++;
     });
     $('[data-vazio]').hidden = visiveis > 0;
-    if (filtroAtual !== 'todos' || termo) abrirCatalogo();
     $$('[data-filtro]').forEach(x => x.setAttribute('aria-selected', x.dataset.filtro === filtroAtual));
     if (temGsap) ScrollTrigger.refresh();
   }
@@ -137,10 +141,6 @@
     filtrar();
   });
   $('[data-busca]').addEventListener('input', filtrar);
-  function abrirCatalogo() {
-    $('[data-grade]').classList.remove('recolhida');
-    $('[data-ver-todos]').hidden = true;
-  }
 
   /* ---------- lista de orçamento ---------- */
   let lista = [];
@@ -203,7 +203,6 @@
   function irParaEquip(id) {
     const card = $('#eq-' + id);
     if (card.classList.contains('oculto')) { filtroAtual = 'todos'; $('[data-busca]').value = ''; filtrar(); }
-    abrirCatalogo();
     rolarPara(topoDe(card) - innerHeight / 2 + card.offsetHeight / 2);
     $$('.eq.realce').forEach(c => c.classList.remove('realce'));
     clearTimeout(realceT);
@@ -219,7 +218,6 @@
     let b;
     if ((b = t.closest('[data-ir-eq]'))) return irParaEquip(b.dataset.irEq);
     if ((b = t.closest('[data-ver-fase]'))) return verFase(+b.dataset.verFase);
-    if (t.closest('[data-ver-todos]')) { abrirCatalogo(); if (temGsap) ScrollTrigger.refresh(); return; }
     if ((b = t.closest('[data-ir-cap]'))) return rolarPara(topoDe($('#cap-' + b.dataset.irCap)));
     if ((b = t.closest('[data-add]'))) {
       const id = b.dataset.add;
@@ -234,7 +232,7 @@
     const a = t.closest('a[href^="#"]');
     if (a && a.getAttribute('href').length > 1) {
       const alvo = $(a.getAttribute('href'));
-      if (alvo) { ev.preventDefault(); rolarPara(alvo.id === 'topo' ? 0 : topoDe(alvo) - (/^cap-/.test(alvo.id) ? 0 : 70)); }
+      if (alvo) { ev.preventDefault(); rolarPara(alvo.id === 'topo' ? 0 : topoDe(alvo) - (/^(conjuntos|cap-)/.test(alvo.id) ? 0 : 70)); }
     }
   });
 
@@ -359,11 +357,9 @@
     return { P, g, cap };
   }
 
+  carregarSerie();
   ajustarCanvas();
-  const iniciarFilme = () => { if (!serie) carregarSerie(); };
-  addEventListener('load', () => setTimeout(iniciarFilme, 1200));
-  ScrollTrigger.create({ trigger: filme, start: 'top 250%', once: true, onEnter: iniciarFilme });
-  addEventListener('resize', () => { ajustarCanvas(); if (serie) carregarSerie(); });
+  addEventListener('resize', () => { ajustarCanvas(); carregarSerie(); });
   const rolar = $('.filme-rolar');
   gsap.ticker.add(() => {
     const { P, g, cap } = progressoFilme();
@@ -374,19 +370,16 @@
     mostrarCap(cap);
     rolar.style.opacity = P > 0.01 ? 0 : 1;
   });
-  // capa: as 4 peças do símbolo se encaixam, o nome aparece e o texto entra
-  const pecas = $$('.capa .peca');
-  gsap.timeline({ defaults: { ease: 'power4.out' }, delay: 0.15 })
-    .from('.nav', { y: -20, opacity: 0, duration: 1 }, 0.2)
-    .from(pecas, { x: i => +pecas[i].dataset.dx * 70, y: i => +pecas[i].dataset.dy * 70, rotation: i => +pecas[i].dataset.dx * +pecas[i].dataset.dy * 35, opacity: 0, transformOrigin: '50% 50%', duration: 1.5, stagger: 0.07 }, 0)
-    .from('.capa-aneis polygon', { scale: 0.7, opacity: 0, rotation: -25, transformOrigin: '50% 50%', duration: 1.8, stagger: 0.1 }, 0.1)
-    .from('.marca-nome', { y: 14, opacity: 0, duration: 1 }, 0.8)
-    .set('.capa-tit .ln > span, [data-capa]', { visibility: 'visible' }, 0.9)
-    .from('.capa-assin', { opacity: 0, y: 14, duration: 0.9 }, 1)
-    .from('.capa-tit .ln > span', { yPercent: 110, duration: 1.2, stagger: 0.12 }, 1.1)
-    .from('.capa-sub, .capa-cta', { y: 24, opacity: 0, duration: 1, stagger: 0.1 }, 1.4);
-  gsap.to('.capa-aneis', { rotation: 360, transformOrigin: '50% 50%', duration: 120, repeat: -1, ease: 'none' });
-  gsap.to('.capa-txt', { yPercent: -10, opacity: 0.2, ease: 'none', scrollTrigger: { trigger: '.capa', start: '30% top', end: 'bottom top', scrub: true } });
+  // capa: a frota aparece e o texto entra em sequência
+  gsap.timeline({ defaults: { ease: 'power4.out' }, delay: 0.1 })
+    .fromTo('.capa-foto img', { scale: 1.12, opacity: 0 }, { scale: 1, opacity: 1, duration: 2.2, ease: 'power2.out' }, 0)
+    .from('.nav', { y: -20, opacity: 0, duration: 1 }, 0.3)
+    .set('.capa-tit .ln > span, [data-capa]', { visibility: 'visible' }, 0.35)
+    .from('.capa-logo', { y: 24, opacity: 0, duration: 1 }, 0.35)
+    .from('.capa-tit .ln > span', { yPercent: 110, duration: 1.2, stagger: 0.12 }, 0.5)
+    .from('.capa-sub, .capa-cta, .capa-provas', { y: 24, opacity: 0, duration: 1, stagger: 0.1 }, 0.9);
+  gsap.to('.capa-foto img', { yPercent: 8, scale: 1.05, ease: 'none', scrollTrigger: { trigger: '.capa', start: 'top top', end: 'bottom top', scrub: true } });
+  gsap.to('.capa-txt', { yPercent: -12, opacity: 0.15, ease: 'none', scrollTrigger: { trigger: '.capa', start: '35% top', end: 'bottom top', scrub: true } });
 
   // novas seções entram ao rolar
   $$('.sec-cab, .provas, .passos, .rapido-txt, .faq').forEach(el => {
@@ -395,6 +388,18 @@
   $$('.passos-cta, .form, .cat-ferr').forEach(el => {
     gsap.from(el, { y: 34, opacity: 0, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 90%' } });
   });
+
+  // conjuntos: rolagem horizontal presa no computador
+  const mm = gsap.matchMedia();
+  mm.add('(min-width: 861px)', () => {
+    const trilho = $('[data-conj]');
+    const dist = () => Math.max(0, trilho.scrollWidth - innerWidth);
+    gsap.to(trilho, {
+      x: () => -dist(), ease: 'none',
+      scrollTrigger: { trigger: '.conjuntos', start: 'top top', end: () => '+=' + dist(), pin: '.conj-pin', scrub: 1, invalidateOnRefresh: true, anticipatePin: 1 }
+    });
+  });
+  gsap.from('.conj-cab > *', { y: 30, opacity: 0, stagger: 0.1, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: '.conjuntos', start: 'top 75%' } });
 
   // catálogo
   gsap.from('.cat-cab', { y: 30, opacity: 0, stagger: 0.1, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: '.catalogo', start: 'top 80%' } });
